@@ -12,8 +12,8 @@ export class Input {
         output(question);
         this._stdin.resume();
 
-        return new Promise((resolve: (value: string) => void) => {
-            process.stdin.on('data', (text) => {
+        return new Promise((resolve: (value: string) => void): void => {
+            process.stdin.on('data', (text: string): void => {
                 resolve(text);
                 this._stdin.pause();
             });
