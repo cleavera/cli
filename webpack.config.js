@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: {
@@ -30,5 +31,12 @@ module.exports = {
             'node_modules'
         ],
         extensions: ['.ts', '.js']
-    }
+    },
+
+    plugins: [
+        new webpack.BannerPlugin({
+            banner: '#!/usr/bin/env node',
+            raw: true
+        })
+    ]
 };
