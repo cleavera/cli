@@ -12,6 +12,7 @@
   "author": "Anthony Cleaver",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^8.0.53",
     "ts-loader": "^3.1.1",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1",
