@@ -17,5 +17,8 @@
     "tslint": "^5.8.0",
     "typescript": "^2.6.1",
     "webpack": "^3.8.1"
+  },
+  "devDependencies": {
+    "raw-loader": "^0.5.1"
   }
 }

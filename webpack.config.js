@@ -15,6 +15,10 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: ['ts-loader']
+            },
+            {
+                test: /\.template$/,
+                use: ['raw-loader']
             }
         ]
     },

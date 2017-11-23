@@ -14,9 +14,15 @@ export class Input {
 
         return new Promise((resolve: (value: string) => void): void => {
             process.stdin.on('data', (text: string): void => {
-                resolve(text);
+                resolve(text.trim());
                 this._stdin.pause();
             });
         });
+    }
+
+    public async bool(question: string): Promise<boolean> {
+        const resp: string = await this.ask(`${question} (y/n)`);
+
+        return resp === 'y' || resp === 'yes';
     }
 }
