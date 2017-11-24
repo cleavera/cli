@@ -9,7 +9,7 @@ export class Input {
     }
 
     public ask(question: string): Promise<string> {
-        output(question);
+        output(`${question} `);
         this._stdin.resume();
 
         return new Promise((resolve: (value: string) => void): void => {

@@ -1,4 +1,5 @@
-import { Input, output } from '../shared';
+import * as fs from 'fs';
+import { child, Input } from '../shared';
 import * as template from './resources';
 
 export async function run(input: Input): Promise<void> {
@@ -9,16 +10,22 @@ export async function run(input: Input): Promise<void> {
         isAngular = await input.bool('Is this project an angular project?');
     }
 
-    output(template.tsconfig);
-    output(template.tslint);
+    let webpack: string;
 
     if (hasTemplate) {
         if (isAngular) {
-            output(template.webpackAngular);
+            webpack = template.webpackAngular;
         } else {
-            output(template.webpackTemplate);
+            webpack = template.webpackTemplate;
         }
     } else {
-        output(template.webpack);
+        webpack = template.webpack;
     }
+
+    await child('git init');
+    await child(`npm.cmd init`);
+
+    fs.writeFileSync('./tslint.json', template.tslint);
+    fs.writeFileSync('./tsconfig.json', template.tsconfig);
+    fs.writeFileSync('./webpack.config.js', webpack);
 }
