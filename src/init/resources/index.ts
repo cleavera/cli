@@ -1,3 +1,4 @@
+export const gitIgnore: string = require('./.gitignore.template');
 export const tsconfig: string = require('./tsconfig.json.template');
 export const tslint: string = require('./tslint.json.template');
 export const webpack: string = require('./webpack.config.js.template');
