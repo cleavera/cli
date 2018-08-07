@@ -3,65 +3,79 @@ import { child, Input } from '../shared';
 import * as template from './resources';
 
 export async function run(input: Input): Promise<void> {
-    const isNode: boolean = await input.bool('Is this a node only project?');
-    const devDep: Array<string> = [
-        'typescript',
-        'tslint'
-    ];
-
-    const scripts: { [index: string]: string } = {};
-
-    let hasTemplate: boolean = false;
-
-    if (!isNode) {
-        devDep.push('webpack');
-        devDep.push('ts-loader');
-        scripts.build = 'webpack';
-
-        hasTemplate = await input.bool('Does this project have a template?');
-    } else {
-        devDep.push('@types/node');
-        scripts.build = `tsc`;
-    }
-
-    let isAngular: boolean = false;
-
+    const isLibrary: boolean = await input.bool('Is this a library?');
+    const devDep: Array<string> = [];
     const dep: Array<string> = [];
+    const scripts: { [index: string]: string } = {};
     let webpack: string | null = null;
 
-    if (hasTemplate) {
-        devDep.push('raw-loader');
-        devDep.push('sass-loader');
-        devDep.push('node-sass');
-        devDep.push('html-webpack-plugin');
+    if (!isLibrary) {
+        const isNode: boolean = await input.bool('Is this a node only project?');
+        devDep.push('typescript');
+        devDep.push('tslint');
 
-        webpack = template.webpack;
+        let hasTemplate: boolean = false;
 
-        isAngular = await input.bool('Is this project an angular project?');
+        if (!isNode) {
+            devDep.push('webpack');
+            devDep.push('ts-loader');
+            scripts.build = 'webpack';
 
-        if (isAngular) {
-            devDep.push('angular2-template-loader');
-            dep.push('@angular/common');
-            dep.push('@angular/compiler');
-            dep.push('@angular/core');
-            dep.push('@angular/platform-browser');
-            dep.push('@angular/platform-browser-dynamic');
-            dep.push('core-js');
-            dep.push('reflect-metadata');
-            dep.push('rxjs');
-            dep.push('zone.js');
-
-            webpack = template.webpackAngular;
+            hasTemplate = await input.bool('Does this project have a template?');
         } else {
-            webpack = template.webpackTemplate;
+            devDep.push('@types/node');
+            scripts.build = `tsc`;
         }
-    }
 
-    const isUnitTested: boolean = await input.bool('Is this project unit tested?');
+        let isAngular: boolean = false;
 
-    if (isUnitTested) {
-        devDep.push('alsatian');
-        scripts.test = 'alsatian ./src/**/*.spec.ts';
+        if (hasTemplate) {
+            devDep.push('raw-loader');
+            devDep.push('sass-loader');
+            devDep.push('node-sass');
+            devDep.push('html-webpack-plugin');
+
+            webpack = template.webpack;
+
+            isAngular = await input.bool('Is this project an angular project?');
+
+            if (isAngular) {
+                devDep.push('angular2-template-loader');
+                dep.push('@angular/common');
+                dep.push('@angular/compiler');
+                dep.push('@angular/core');
+                dep.push('@angular/platform-browser');
+                dep.push('@angular/platform-browser-dynamic');
+                dep.push('core-js');
+                dep.push('reflect-metadata');
+                dep.push('rxjs');
+                dep.push('zone.js');
+
+                webpack = template.webpackAngular;
+            } else {
+                webpack = template.webpackTemplate;
+            }
+        }
+
+        const isUnitTested: boolean = await input.bool('Is this project unit tested?');
+
+        if (isUnitTested) {
+            if (isAngular) {
+                devDep.push('karma');
+                devDep.push('karma-cli');
+                devDep.push('karma-webpack');
+                devDep.push('karma-jasmine');
+                devDep.push('karma-chrome-launcher');
+                devDep.push('puppeteer');
+                devDep.push('jasmine-core');
+                devDep.push('@types/jasmine-core');
+
+                scripts.test = 'karma';
+            } else {
+                devDep.push('alsatian');
+                scripts.test = 'alsatian ./src/**/*.spec.ts';
+            }
+        }
     }
 
     await child('git init');
@@ -71,19 +85,28 @@ export async function run(input: Input): Promise<void> {
     fs.writeFileSync('./tsconfig.json', template.tsconfig);
     fs.writeFileSync('./.gitignore', template.gitIgnore);
 
+    if (isLibrary) {
+        fs.writeFileSync('./root.js', template.root);
+    }
+
     if (webpack) {
         fs.writeFileSync('./webpack.config.js', webpack);
     }
 
-    await child(`npm.cmd i ${devDep.join(' ')} --save-dev`);
+    if (devDep.length) {
+        await child(`npm.cmd i ${devDep.join(' ')} --save-dev`);
+    }
+
     if (dep.length) {
         await child(`npm.cmd i ${dep.join(' ')} --save`);
     }
 
-    const packageJson: any = JSON.parse(fs.readFileSync('./package.json', 'utf-8')); // tslint:disable-line no-any
-    packageJson.scripts = scripts;
+    if (Object.keys(scripts).length) {
+        const packageJson: any = JSON.parse(fs.readFileSync('./package.json', 'utf-8')); // tslint:disable-line no-any
+        packageJson.scripts = scripts;
 
-    fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
+        fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
+    }
 
     await child(`git add -A`);
 }
