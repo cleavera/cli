@@ -8,8 +8,11 @@ export async function run(input: Input): Promise<void> {
     const dep: Array<string> = [];
     const scripts: { [index: string]: string } = {};
     let webpack: string | null = null;
+    let isModule: boolean = false;
 
     if (!isLibrary) {
+        isModule = await input.bool('Is this a module?');
+
         const isNode: boolean = await input.bool('Is this a node only project?');
         devDep.push('typescript');
         devDep.push('tslint');
@@ -78,12 +81,17 @@ export async function run(input: Input): Promise<void> {
         }
     }
 
-    await child('git init');
     await child(`npm.cmd init`);
 
-    fs.writeFileSync('./tslint.json', template.tslint);
-    fs.writeFileSync('./tsconfig.json', template.tsconfig);
-    fs.writeFileSync('./.gitignore', template.gitIgnore);
+    if (!isModule) {
+        await child('git init');
+        fs.writeFileSync('./tslint.json', template.tslint);
+        fs.writeFileSync('./tsconfig.json', template.tsconfig);
+        fs.writeFileSync('./.gitignore', template.gitIgnore);
+    } else {
+        fs.writeFileSync('./tslint.json', template.tslintModule);
+        fs.writeFileSync('./tsconfig.json', template.tsconfigModule);
+    }
 
     if (isLibrary) {
         fs.writeFileSync('./root.js', template.root);
