@@ -87,7 +87,11 @@ export async function run(input: Input): Promise<void> {
         await child('git init');
         fs.writeFileSync('./tslint.json', template.tslint);
         fs.writeFileSync('./tsconfig.json', template.tsconfig);
-        fs.writeFileSync('./.gitignore', template.gitIgnore);
+        if (isLibrary) {
+            fs.writeFileSync('./.gitignore', template.gitIgnoreLibrary);
+        } else {
+            fs.writeFileSync('./.gitignore', template.gitIgnore);
+        }
     } else {
         fs.writeFileSync('./tslint.json', template.tslintModule);
         fs.writeFileSync('./tsconfig.json', template.tsconfigModule);
