@@ -1,12 +1,11 @@
 {
-  "name": "ac-cli",
+  "name": "@cleavera/cli",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "webpack",
     "lint": "tslint ./src/**/*.ts --project ./tsconfig.json",
-    "prepublish": "npm run lint && npm run build",
+    "prepublishOnly": "npm run lint && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anthony Cleaver",

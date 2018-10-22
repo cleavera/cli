@@ -3,3 +3,6 @@ tslint.json
 webpack.config.js
 tsconfig.json
 .gitignore
+.idea
+scripts
+*.tgz
