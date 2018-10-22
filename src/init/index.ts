@@ -21,6 +21,7 @@ export async function run(input: Input): Promise<void> {
 
         if (!isNode) {
             devDep.push('webpack');
+            devDep.push('webpack-cli');
             devDep.push('ts-loader');
             scripts.build = 'webpack';
 

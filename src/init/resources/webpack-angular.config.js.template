@@ -49,8 +49,8 @@ module.exports = {
             inject: 'body'
         }),
         new webpack.ContextReplacementPlugin(
-            /angular(\\|\/)core(\\|\/)@angular/,
-            path.resolve(__dirname, '../src')
+            /\@angular(\\|\/)core(\\|\/)fesm5/,
+            path.resolve(__dirname, './src')
         )
     ]
 };
