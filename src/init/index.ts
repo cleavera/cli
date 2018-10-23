@@ -99,7 +99,7 @@ export async function run(input: Input): Promise<void> {
         fs.writeFileSync('./.npmignore', template.npmIgnore);
 
         scripts.lint = `tslint --project ./tsconfig.json`;
-        scripts.prepublish = `npm run lint && npm run build`;
+        scripts.prepack = `npm run lint && npm run build`;
     }
 
     if (isLibrary) {

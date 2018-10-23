@@ -8,7 +8,7 @@ module.exports = {
     },
 
     output: {
-        path: path.resolve(__dirname),
+        path: path.resolve(__dirname, './dist'),
         filename: 'index.js'
     },
 
@@ -20,7 +20,7 @@ module.exports = {
                     'ts-loader',
                     'angular2-template-loader'
                 ]
-                
+
             },
             {
                 test: /\.html$/,
