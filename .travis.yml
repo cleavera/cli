@@ -1,6 +1,0 @@
-deploy:
-  provider: npm
-  email: "antisback@gmail.com"
-  api_key: "246414f0-7eed-4250-901d-595cbea80923"
-  on:
-    tags: true
