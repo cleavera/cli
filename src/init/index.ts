@@ -10,6 +10,8 @@ export async function run(input: Input): Promise<void> {
     let webpack: string | null = null;
     let isModule: boolean = false;
 
+    devDep.push('@cleavera/config');
+
     if (!isLibrary) {
         isModule = await input.bool('Is this a module?');
 
