@@ -74,7 +74,7 @@ export async function run(input: Input): Promise<void> {
                 devDep.push('karma-chrome-launcher');
                 devDep.push('puppeteer');
                 devDep.push('jasmine-core');
-                devDep.push('@types/jasmine-core');
+                devDep.push('@types/jasmine');
 
                 scripts.test = 'karma';
             } else {
